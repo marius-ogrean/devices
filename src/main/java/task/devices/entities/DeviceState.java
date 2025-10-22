@@ -1,7 +1,7 @@
 package task.devices.entities;
 
 public enum DeviceState {
-    AVAILABLE("A"), INUSE("U"), INACTIVE("I");
+    AVAILABLE("AV"), INUSE("US"), INACTIVE("IN");
 
     private final String code;
 
