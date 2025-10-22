@@ -6,3 +6,7 @@ Installation information
 Containerization information
 
 - To create the image and run the container run in the root folder this command: docker compose up
+
+Documentation
+
+- You can access the swagger documentation at: http://localhost:8080/swagger-ui/index.html
