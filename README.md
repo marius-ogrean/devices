@@ -5,7 +5,7 @@ Installation information
 
 Containerization information
 
-- To create the image and run the container run in the root folder this command: docker compose up
+- To create the image and start a container run in the root folder this command: docker compose up
 
 Documentation
 
