@@ -5,11 +5,4 @@ Installation information
 
 Containerization information
 
-- My home machine is on Windows so I used the local ip for the mysql connection string so that the database is accesible from the container 
-- Commands to run in the root folder, after building the project:
-  1. docker build -t task-devices .
-     (this creates the image named task-devices)
-  2. docker run -p 8080:8080 task-devices
-     (this starts a container)
-
-    
+- To create the image and run the container run: docker compose up
