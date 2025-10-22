@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import task.devices.converters.DeviceConverter;
 import task.devices.dtos.DeviceDto;
+import task.devices.entities.DeviceState;
 import task.devices.models.DeviceModel;
 import task.devices.services.DevicesService;
 
@@ -20,8 +21,9 @@ public class DevicesController {
     private DeviceConverter deviceConverter;
 
     @GetMapping
-    public List<DeviceDto> getAllDevices() {
-        return devicesService.getAllDevices().stream()
+    public List<DeviceDto> getAllDevices(@RequestParam(required = false) String brand,
+                                         @RequestParam(required = false) DeviceState state) {
+        return devicesService.getAllDevices(brand, state).stream()
                 .map(d -> deviceConverter.convertToDto(d))
                 .collect(Collectors.toList());
     }
