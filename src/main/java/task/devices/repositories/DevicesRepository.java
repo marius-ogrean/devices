@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import task.devices.entities.Device;
 
 @Repository
-public interface DevicesRepository extends JpaRepository<Device, Long> {
+public interface DevicesRepository extends JpaRepository<Device, Long>, DevicesCustomRepository {
 }
