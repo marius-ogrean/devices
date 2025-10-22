@@ -10,4 +10,5 @@ public interface DevicesService {
     List<DeviceModel> getAllDevices(String brand, DeviceState state);
     DeviceModel getDevice(Long id);
     void deleteDevice(Long id);
+    void updateDevice(Long id, DeviceModel deviceModel);
 }

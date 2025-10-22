@@ -5,10 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import task.devices.converters.DeviceConverter;
 import task.devices.dtos.DeviceDto;
 import task.devices.entities.DeviceState;
-import task.devices.models.DeviceModel;
 import task.devices.services.DevicesService;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,11 +39,7 @@ public class DevicesController {
 
     @PostMapping
     public Long createDevice(@RequestBody DeviceDto device) {
-        var deviceModel = DeviceModel.builder()
-                .name(device.getName())
-                .brand(device.getBrand())
-                .state(device.getState())
-                .build();
+        var deviceModel = deviceConverter.convertToModel(device);
 
         var id = devicesService.createDevice(deviceModel);
 
@@ -55,5 +49,12 @@ public class DevicesController {
     @DeleteMapping("/{id}")
     public void deleteDevice(@PathVariable Long id) {
         devicesService.deleteDevice(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateDevice(@PathVariable Long id, @RequestBody DeviceDto device) {
+        var deviceModel = deviceConverter.convertToModel(device);
+
+        devicesService.updateDevice(id, deviceModel);
     }
 }

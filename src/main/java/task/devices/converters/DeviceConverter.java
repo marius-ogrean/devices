@@ -28,4 +28,12 @@ public class DeviceConverter {
                 .creationTime(device.getCreationTime().atZone(ZoneId.systemDefault()))
                 .build();
     }
+
+    public DeviceModel convertToModel(DeviceDto device) {
+        return DeviceModel.builder()
+                .name(device.getName())
+                .brand(device.getBrand())
+                .state(device.getState())
+                .build();
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import task.devices.converters.DeviceConverter;
 import task.devices.entities.Device;
 import task.devices.entities.DeviceState;
+import task.devices.exceptions.DeviceInUseException;
 import task.devices.models.DeviceModel;
 import task.devices.repositories.DevicesRepository;
 import task.devices.services.DateService;
@@ -57,12 +58,23 @@ public class DevicesServiceImpl implements DevicesService {
 
     @Override
     public void deleteDevice(Long id) {
-        var device = devicesRepository.findById(id);
+        var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        if (device.isEmpty()) {
-            throw new IllegalArgumentException();
+        if (device.getState().equals(DeviceState.INUSE)) {
+            throw new DeviceInUseException();
         }
 
-        devicesRepository.delete(device.get());
+        devicesRepository.delete(device);
+    }
+
+    @Override
+    public void updateDevice(Long id, DeviceModel deviceModel) {
+        var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        device.setName(deviceModel.getName());
+        device.setBrand(deviceModel.getBrand());
+        device.setState(deviceModel.getState());
+
+        devicesRepository.save(device);
     }
 }
