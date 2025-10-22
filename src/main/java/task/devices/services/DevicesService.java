@@ -9,4 +9,5 @@ public interface DevicesService {
     Long createDevice(DeviceModel device);
     List<DeviceModel> getAllDevices(String brand, DeviceState state);
     DeviceModel getDevice(Long id);
+    void deleteDevice(Long id);
 }

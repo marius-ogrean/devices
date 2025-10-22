@@ -30,7 +30,13 @@ public class DevicesController {
 
     @GetMapping("/{id}")
     public DeviceDto getDevice(@PathVariable Long id) {
-        return deviceConverter.convertToDto(devicesService.getDevice(id));
+        var device = devicesService.getDevice(id);
+
+        if (device == null) {
+            return null;
+        }
+
+        return deviceConverter.convertToDto(device);
     }
 
     @PostMapping
@@ -44,5 +50,10 @@ public class DevicesController {
         var id = devicesService.createDevice(deviceModel);
 
         return id;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteDevice(@PathVariable Long id) {
+        devicesService.deleteDevice(id);
     }
 }

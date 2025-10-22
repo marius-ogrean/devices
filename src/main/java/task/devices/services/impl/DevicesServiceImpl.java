@@ -71,6 +71,21 @@ public class DevicesServiceImpl implements DevicesService {
     public DeviceModel getDevice(Long id) {
         var device = devicesRepository.findById(id);
 
+        if (device.isEmpty()) {
+            return null;
+        }
+
         return device.map(d -> deviceConverter.convertToModel(d)).orElse(null);
+    }
+
+    @Override
+    public void deleteDevice(Long id) {
+        var device = devicesRepository.findById(id);
+
+        if (device.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        devicesRepository.delete(device.get());
     }
 }
