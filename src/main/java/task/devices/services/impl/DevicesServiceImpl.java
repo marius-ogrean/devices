@@ -7,6 +7,7 @@ import task.devices.entities.Device;
 import task.devices.entities.DeviceState;
 import task.devices.exceptions.DeviceInUseException;
 import task.devices.exceptions.InvalidPatchFieldException;
+import task.devices.exceptions.UpdateWhileInUseException;
 import task.devices.models.DeviceModel;
 import task.devices.models.DeviceUpdateModel;
 import task.devices.repositories.DevicesRepository;
@@ -75,6 +76,10 @@ public class DevicesServiceImpl implements DevicesService {
     public void updateDevice(Long id, DeviceModel deviceModel) {
         var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
+        if (device.getState().equals(DeviceState.INUSE)) {
+            throw new UpdateWhileInUseException();
+        }
+
         device.setName(deviceModel.getName());
         device.setBrand(deviceModel.getBrand());
         device.setState(deviceModel.getState());
@@ -95,6 +100,16 @@ public class DevicesServiceImpl implements DevicesService {
         }
 
         var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        if (device.getState().equals(DeviceState.INUSE)) {
+            var invalidUpdateFieldsWhileInUse = updates.stream()
+                    .filter(u -> u.getFieldName().equals("name") || u.getFieldName().equals("brand"))
+                    .findFirst();
+
+            if (invalidUpdateFieldsWhileInUse.isPresent()) {
+                throw new UpdateWhileInUseException();
+            }
+        }
 
         for (DeviceUpdateModel update : updates) {
             Field field;

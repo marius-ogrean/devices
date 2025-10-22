@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import task.devices.exceptions.DeviceInUseException;
 import task.devices.exceptions.InvalidPatchFieldException;
+import task.devices.exceptions.UpdateWhileInUseException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -29,5 +30,12 @@ public class ControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Invalid field name; valid names: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(UpdateWhileInUseException.class)
+    public ResponseEntity handleUpdateWhileInUseException() {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Cannot update name or brand for device which is in use");
     }
 }
