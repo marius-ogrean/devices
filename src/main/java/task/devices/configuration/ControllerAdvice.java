@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import task.devices.exceptions.DeviceInUseException;
+import task.devices.exceptions.DeleteDeviceInUseException;
 import task.devices.exceptions.InvalidPatchFieldException;
 import task.devices.exceptions.UpdateWhileInUseException;
 
@@ -18,11 +18,11 @@ public class ControllerAdvice {
                 .body("Invalid id");
     }
 
-    @ExceptionHandler(DeviceInUseException.class)
+    @ExceptionHandler(DeleteDeviceInUseException.class)
     public ResponseEntity handleDeviceInUseException() {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("Device is in use");
+                .body("Cannot delete device which is in use");
     }
 
     @ExceptionHandler(InvalidPatchFieldException.class)

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import task.devices.converters.DeviceConverter;
 import task.devices.entities.Device;
 import task.devices.entities.DeviceState;
-import task.devices.exceptions.DeviceInUseException;
+import task.devices.exceptions.DeleteDeviceInUseException;
 import task.devices.exceptions.InvalidPatchFieldException;
 import task.devices.exceptions.UpdateWhileInUseException;
 import task.devices.models.DeviceModel;
@@ -66,7 +66,7 @@ public class DevicesServiceImpl implements DevicesService {
         var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         if (device.getState().equals(DeviceState.INUSE)) {
-            throw new DeviceInUseException();
+            throw new DeleteDeviceInUseException();
         }
 
         devicesRepository.delete(device);
