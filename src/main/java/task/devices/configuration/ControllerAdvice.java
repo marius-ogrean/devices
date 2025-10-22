@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import task.devices.exceptions.DeviceInUseException;
+import task.devices.exceptions.InvalidPatchFieldException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -21,5 +22,12 @@ public class ControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Device is in use");
+    }
+
+    @ExceptionHandler(InvalidPatchFieldException.class)
+    public ResponseEntity handleInvalidPatchFieldException(InvalidPatchFieldException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Invalid field name; valid names: " + ex.getMessage());
     }
 }

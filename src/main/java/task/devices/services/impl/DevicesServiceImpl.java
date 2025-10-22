@@ -6,11 +6,15 @@ import task.devices.converters.DeviceConverter;
 import task.devices.entities.Device;
 import task.devices.entities.DeviceState;
 import task.devices.exceptions.DeviceInUseException;
+import task.devices.exceptions.InvalidPatchFieldException;
 import task.devices.models.DeviceModel;
+import task.devices.models.DeviceUpdateModel;
 import task.devices.repositories.DevicesRepository;
 import task.devices.services.DateService;
 import task.devices.services.DevicesService;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,5 +80,42 @@ public class DevicesServiceImpl implements DevicesService {
         device.setState(deviceModel.getState());
 
         devicesRepository.save(device);
+    }
+
+    @Override
+    public void patchDevice(Long id, List<DeviceUpdateModel> updates) {
+        var validFieldNames = Arrays.asList("name", "brand", "state");
+
+        var invalidFieldName = updates.stream()
+                .filter(u -> !validFieldNames.contains(u.getFieldName()))
+                .findFirst();
+
+        if (invalidFieldName.isPresent()) {
+            throw new InvalidPatchFieldException(String.join(",", validFieldNames));
+        }
+
+        var device = devicesRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        for (DeviceUpdateModel update : updates) {
+            Field field;
+
+            try {
+                field = device.getClass().getDeclaredField(update.getFieldName());
+                field.setAccessible(true);
+                field.set(device, getFieldValue(update.getFieldName(), update.getNewValue()));
+            } catch (Exception ex) {
+                throw new InvalidPatchFieldException(String.join(",", validFieldNames));
+            }
+        }
+
+        devicesRepository.save(device);
+    }
+
+    private Object getFieldValue(String fieldName, String newValue) {
+        return switch (fieldName) {
+            case "name", "brand" -> newValue;
+            case "state" -> DeviceState.valueOf(newValue);
+            default -> null;
+        };
     }
 }

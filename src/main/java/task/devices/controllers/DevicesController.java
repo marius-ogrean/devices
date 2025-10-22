@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import task.devices.converters.DeviceConverter;
 import task.devices.dtos.DeviceDto;
+import task.devices.dtos.DeviceUpdateDto;
 import task.devices.entities.DeviceState;
+import task.devices.models.DeviceUpdateModel;
 import task.devices.services.DevicesService;
 
 import java.util.List;
@@ -56,5 +58,17 @@ public class DevicesController {
         var deviceModel = deviceConverter.convertToModel(device);
 
         devicesService.updateDevice(id, deviceModel);
+    }
+
+    @PatchMapping("/{id}")
+    public void patchDevice(@PathVariable Long id, @RequestBody List<DeviceUpdateDto> updates) {
+        var updateModels = updates.stream()
+                .map(u -> DeviceUpdateModel.builder()
+                        .fieldName(u.getFieldName())
+                        .newValue(u.getNewValue())
+                        .build())
+                .collect(Collectors.toList());
+
+        devicesService.patchDevice(id, updateModels);
     }
 }

@@ -2,6 +2,7 @@ package task.devices.services;
 
 import task.devices.entities.DeviceState;
 import task.devices.models.DeviceModel;
+import task.devices.models.DeviceUpdateModel;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ public interface DevicesService {
     DeviceModel getDevice(Long id);
     void deleteDevice(Long id);
     void updateDevice(Long id, DeviceModel deviceModel);
+    void patchDevice(Long id, List<DeviceUpdateModel> updates);
 }
