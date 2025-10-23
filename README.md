@@ -10,3 +10,7 @@ Containerization information
 Documentation
 
 - You can access the swagger documentation at: http://localhost:8080/swagger-ui/index.html
+
+Unit testing
+
+- I added a few unit tests for example purposes. More of them can be written on the existing code
